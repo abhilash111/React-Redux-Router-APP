@@ -79,5 +79,8 @@ email us at abhilashkulkarni11@gmail.com
 - Follow Airbnb Javascript Style Guide
 
 ## Change-Log
+# V-1.0.1
+* Redux Setup for APP
+
 # V-1.0.0
 * Created REACT APP with create-react-app
