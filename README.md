@@ -79,6 +79,10 @@ email us at abhilashkulkarni11@gmail.com
 - Follow Airbnb Javascript Style Guide
 
 ## Change-Log
+# V-1.0.2
+* React Router setup
+* React Protected Routes and unauthorized routes
+
 # V-1.0.1
 * Redux Setup for APP
 

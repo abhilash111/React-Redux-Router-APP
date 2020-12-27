@@ -1,10 +1,15 @@
-import React from 'react';
+
+import React, { useState } from 'react';
+import './App.css';
+
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import { setAuth } from './redux/actions/app'
-import logo from './logo.svg';
-import './App.css';
+import Landing from './components/Landing';
+import Dashboard from './components/Dashboard';
+import ProtectedRoute from './routes/ProtectedRoute';
+import Unauthorized from './components/Unauthorized';
 
 class App extends React.Component {
   constructor(props) {
@@ -14,52 +19,38 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount(){
-    console.log('Default redux props', this.props.email);
+  handleLogin = e => {
+    e.preventDefault();
+    this.props.setAuth({
+      isAuth: true,
+      name: 'Abhilash Kulkarni',
+      email: 'abhilashkulkarni11@gmail.com'
+    })
   }
-
-  authenticateUser(type) {
-
-    let payload = {
+  handleLogout = e => {
+    e.preventDefault();
+    this.props.setAuth({
       isAuth: false,
       name: '',
       email: ''
-    }
-    if (type === 'login') {
-      payload.isAuth = true;
-      payload.name = 'Abhilash Kulkarni';
-      payload.email = 'abhilashkulkarni11@gmail.com'
-    }
-    this.props.setAuth(payload);
+    })
   }
 
-  render() {
-    const {isAuth, email, name} = this.props;
-    return (
+  render(){
+    const {name, isAuth} = this.props;
+    return(
       <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        {
-          !isAuth ?
-          <div>
-            <p>
-              Please Login
-            </p>
-            <button onClick={() => this.authenticateUser('login')}>Login</button>
-          </div>
-          :
-          <div>
-            <p>
-              Welcome {name}
-            </p>
-            <button onClick={() => this.authenticateUser('logout')}>Logout</button>
-          </div>
-        }
-      </header>
+      <Router>
+        <Route exact path='/' handleLogin={this.handleLogin} render={
+          props => <Landing {...props} user={isAuth.toString()} handleLogin={this.handleLogin} />} />
+        <ProtectedRoute exact path='/dashboard' user={isAuth} handleLogout={this.handleLogout} component={Dashboard} />
+        <Route exact path='/unauthorized' component={Unauthorized} />
+      </Router>
     </div>
     )
-  }   
+  }
 }
+
 const mapStateToProps = state => ({
   isAuth: state.app.isAuth,
   name: state.app.name,
